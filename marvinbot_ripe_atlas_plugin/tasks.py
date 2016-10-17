@@ -20,21 +20,28 @@ def fetch_probe(probe_id, api_key):
 def on_probe_command(update, *args, **kwargs):
     log.info('Probe command caught')
     message = get_message(update)
-    probe_id = " ".join(kwargs.get('probe_id'))
+    probes = kwargs.get('probe_id')
     api_key = get_config().get("api_key")
+    responses = []
+    for probe_id in probes:
+        data = fetch_probe(probe_id, api_key)
+        log.info(json.dumps(data, indent=4, sort_keys=True))
+        if data.get("status") is None:
+            continue
+        status = data.get("status")
+        values = {
+            "since": arrow.get(status.get("since")).humanize(),
+            "icon": "✅" if status.get("name") == "Connected" else "🅾",
+            "desc": data.get("description"),
+            "status_name": status.get("name")
+        }
+        response = "{icon} {desc}: {status_name} since {since}".format(**values)
+        responses.append(response)
 
-    data = fetch_probe(probe_id, api_key)
-    log.debug(json.dumps(data, indent=4, sort_keys=True))
-
-    status = data.get("status")
-    since = arrow.get(status.get("since"))
-    icon = "✅" if status.get("name") == "Connected" else "🅾"
-    desc = data.get("description")
-    status_name = status.get("name")
-    response = "{icon} {desc}: {status} since {since}".format(icon=icon, desc=desc, status=status_name, since=since.humanize())
-    adapter.bot.sendMessage(chat_id=message.chat_id,
-                            text=response,
-                            parse_mode="Markdown")
+    if len(responses) > 0:
+        adapter.bot.sendMessage(chat_id=message.chat_id,
+                                text="\n".join(responses),
+                                parse_mode="Markdown")
 
 
 def setup(new_adapter):
