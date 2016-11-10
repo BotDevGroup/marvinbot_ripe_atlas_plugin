@@ -16,5 +16,5 @@ setup(name='marvinbot-ripe-atlas-plugin',
       package_data={'': ['*.ini']},
       install_requires=REQUIREMENTS,
       dependency_links=[
-          'git+ssh://git@github.com:BotDevGroup/marvin.git#egg=marvinbot',
+          'git+ssh://git@github.com/BotDevGroup/marvin.git#egg=marvinbot',
       ],)
