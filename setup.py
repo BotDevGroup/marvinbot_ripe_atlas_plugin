@@ -2,7 +2,8 @@ from distutils.core import setup
 from setuptools import find_packages
 
 REQUIREMENTS = [
-    'marvinbot'
+    'marvinbot',
+    'arrow'
 ]
 
 setup(name='marvinbot-ripe-atlas-plugin',
