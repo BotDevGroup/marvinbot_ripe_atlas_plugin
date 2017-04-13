@@ -30,7 +30,7 @@ class ProbeAlias(mongoengine.Document):
     @classmethod
     def by_alias(cls, alias):
         try:
-            return cls.objects.get(alias=alias)
+            return cls.objects.get(alias__iexact=alias)
         except cls.DoesNotExist:
             return None
 
