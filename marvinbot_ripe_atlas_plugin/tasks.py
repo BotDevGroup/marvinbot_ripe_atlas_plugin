@@ -110,9 +110,9 @@ def on_probe_command(update, *args, **kwargs):
     responses = []
     for probe in probes:
         if probe.isdigit():
-            probe_id = probe
+            probe_id = probe.strip()
         else:
-            probe_alias = ProbeAlias.by_alias(probe)
+            probe_alias = ProbeAlias.by_alias(probe.strip())
             if probe_alias is None or probe_alias.date_deleted is not None:
                 adapter.bot.sendMessage(chat_id=message.chat_id,
                                         text="❌ Not a valid probe alias.")
